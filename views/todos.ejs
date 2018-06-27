@@ -1,0 +1,39 @@
+
+<% include ./partials/header.ejs %>
+
+<div class="container logout-div">
+    <a class="btn btn-outline-primary btn-md float-right" href="/auth/logout">Logout</a>
+</div>
+
+<div class="todo-main">
+    <!-- getting first name of the user -->
+    <h2>Your Todo List, <%= user.username.substr(0, user.username.indexOf(' ')) %></h2>
+    <ul class="list-group">
+
+        <form action="/todos" method="POST" class="todo-list-input">
+            <input class="list-group-item todo-list-item" type="text" name="todo" placeholder="Enter todo here...">
+        </form>
+
+        <% user.todos.forEach((todo) => { %>
+            <li class="list-group-item todo-list-item"><%= todo %></li>
+        <% }); %>
+
+    </ul>    
+</div>
+
+<script>
+    $('li').on('click', function() {
+        $(this).fadeOut("slow", function() {
+            var todoItem = $(this).index()-1;
+            $.ajax({
+                type: 'DELETE',
+                url: '/todos/' + todoItem,
+                success: function(data) {
+                    location.reload();
+                }
+            });
+        });
+    });
+</script>
+
+<% include ./partials/footer.ejs %>
